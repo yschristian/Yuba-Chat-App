@@ -4,6 +4,7 @@ const express = require("express")
 const socketio = require("socket.io")
 const app = express()
 const Filter = require("bad-words")
+const{ generateMessage, generateLocationMessage } = require("./utils/messages")
 
 
 const server = http.createServer(app)
@@ -23,8 +24,12 @@ io.on('connection',(socket) =>{
         // socket this emmit in single connection
         // io emit to evry single connection that currently available    
      // when new user come in   
-    socket.emit('message', 'Welcome!')
-    socket.broadcast.emit('message',"new user has joined! ") 
+    socket.emit('message', 
+        //  title: 'Welcome!',
+        //  createdAt: new Date().getTime(),
+        generateMessage('Welcome!')
+    )
+    socket.broadcast.emit('message',generateMessage("new user has joined! ")) 
     // send message to all clients
 
     socket.on('sendMessage', (message,callback) => {
@@ -32,16 +37,18 @@ io.on('connection',(socket) =>{
         if(filter.isProfane(message)){
             return callback('Profanity is not allowed')
         }
-        io.emit('message', message)
+        io.emit('message', generateMessage(message))
         callback()
     })
     socket.on('sendLocation',(coords,callback)=>{
-      io.emit("locationMessage",`https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
+      io.emit("locationMessage",
+      generateLocationMessage(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
+      )
       callback()
     })
 
     socket.on('disconnect',()=>{
-      io.emit('message','a new user has left')
+      io.emit('message',generateMessage('a new user has left'))
    })
     
     
