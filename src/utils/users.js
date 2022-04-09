@@ -44,15 +44,7 @@ const removeUser = (id) =>{
      }
 }
 const getUser = (id)=>{
-   const user = users.find(user => user.id === id)
-    if(user){
-        return {
-            message: 'user found',user
-        }
-    }
-    return{
-        error: 'user not exist'
-    }
+   return users.find(user => user.id === id)
 }
 
 const getUsersInRoom = (room)=>{
