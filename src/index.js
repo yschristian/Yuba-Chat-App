@@ -35,11 +35,15 @@ io.on('connection',(socket) =>{
           }
 
      socket.join(user.room)
-     socket.emit('message',generateMessage('Welcome!')
+     socket.emit('message',generateMessage('admin','Welcome!')
         //  title: 'Welcome!',createdAt: new Date().getTime(),
   )
     socket.broadcast.to(user.room).emit('message',generateMessage(`${user.username} has joined!`))
     callback()
+    io.to(user.room).emit('roomData',{
+        room : user.room,
+        users: getUsersInRoom(user.room)
+    })
     // socket.broadcast.emit('message',generateMessage("new user has joined! "))
     // sending events from server to cleint
     //socket.emit :that sends event to specific clients
@@ -72,7 +76,12 @@ io.on('connection',(socket) =>{
         const user = removeUser(socket.id)
        if(user){
         io.to(user.room).emit('message',generateMessage(`${user.username} has left!`)) 
+        io.to(user.room).emit('roomData',{
+            room: user.room,
+            users: getUsersInRoom(user.room)
+        })
        }
+       
    
    })
     

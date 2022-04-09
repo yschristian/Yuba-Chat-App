@@ -48,12 +48,12 @@ const getUser = (id)=>{
 }
 
 const getUsersInRoom = (room)=>{
-    const usersInRoom = users.filter(user => user.room === room) 
-    if(usersInRoom){
-        return{
-            message:'users found',usersInRoom
-        }
-    }
+    return users.filter(user => user.room === room) 
+    // if(usersInRoom){
+    //     return{
+    //         message:'users found',usersInRoom
+    //     }
+    // }
 }
 
 module.exports ={
