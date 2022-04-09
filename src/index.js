@@ -24,13 +24,24 @@ io.on('connection',(socket) =>{
         // socket this emmit in single connection
         // io emit to evry single connection that currently available    
      // when new user come in   
-    socket.emit('message', 
-        //  title: 'Welcome!',
-        //  createdAt: new Date().getTime(),
-        generateMessage('Welcome!')
-    )
-    socket.broadcast.emit('message',generateMessage("new user has joined! ")) 
+     
     // send message to all clients
+    socket.on('join',({username, room})=>{
+
+     socket.join(room)
+     socket.emit('message',generateMessage('Welcome!')
+        //  title: 'Welcome!',createdAt: new Date().getTime(),
+  )
+    socket.broadcast.to(room).emit('message',generateMessage(`${username} has joined!`))
+    // socket.broadcast.emit('message',generateMessage("new user has joined! "))
+    // sending events from server to cleint
+    //socket.emit :that sends event to specific clients
+    //io.emit: sends event to every client connected
+    //socket.broadcast.emit: sends event to every client connected except the one who is connected
+    //io.to.emit : it emits an event to everybody in specific room
+    //socket.broadcast.to.emit : it emits an event in spaecific room
+
+    })
 
     socket.on('sendMessage', (message,callback) => {
         const filter = new Filter()
@@ -53,23 +64,7 @@ io.on('connection',(socket) =>{
     
     
 })
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 server.listen(port,() => {
     console.log(`server is up on port ${port}`)
 })
